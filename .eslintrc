@@ -1,0 +1,17 @@
+{
+  "extends": "eslint-config-airbnb",
+  "env": {
+    "es6": true
+  },
+  "parser": "babel-eslint",
+  "ecmaFeatures": {
+    "modules": true,
+    "jsx": true
+  },
+  "plugins": [
+    "react"
+  ],
+  "rules": {
+    "react/jsx-closing-bracket-location": 0
+  }
+}
