@@ -4,6 +4,7 @@ const Square = props => {
   const {
     children,
     isActive,
+    onClick,
   } = props;
 
   const style = {
@@ -15,13 +16,17 @@ const Square = props => {
 
     backgroundColor: isActive ? 'white' : 'lightgrey',
     color: isActive ? 'black' : 'grey',
-    border: isActive && '1px solid black',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: isActive ? 'black' : 'lightgrey',
+
+    cursor: 'pointer',
 
     ...props.style,
   };
 
   return (
-    <div className="Square" style={style}>
+    <div className="Square" style={style} onClick={onClick}>
       {children}
     </div>
   );
@@ -30,6 +35,7 @@ const Square = props => {
 Square.propTypes = {
   children: PropTypes.node,
   isActive: PropTypes.bool,
+  onClick: PropTypes.func,
   style: PropTypes.object,
 };
 

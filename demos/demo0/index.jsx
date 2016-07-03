@@ -1,5 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Demo from './Demo';
+import { Provider } from 'react-redux';
 
-ReactDOM.render(<Demo />, document.querySelector('#content'));
+import Demo from './Demo';
+import configureStore from './configureStore';
+
+const store = configureStore();
+
+ReactDOM.render((
+  <Provider store={store}>
+    <Demo />
+  </Provider>
+), document.querySelector('#content'));
