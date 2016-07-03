@@ -1,0 +1,43 @@
+$tabs-bg-color = #253A58
+
+.RC_Tabs
+  color white
+  font-size 14px
+  font-family sans-serif
+  font-weight normal
+
+.RC_TabsList
+  display block
+  text-align left
+  background-color shade($tabs-bg-color, 40%)
+
+.RC_Tab
+  padding 12px 20px
+  display inline-block
+  font-weight normal
+  cursor pointer
+
+  font-size 12px
+  text-transform uppercase
+
+.RC_Tab--active
+  background-color $tabs-bg-color
+  font-weight bold
+
+.RC_Tab--inactive
+  opacity 0.7
+
+  &:active
+    opacity 1
+    background-color rgba(0,0,0,0.03)
+
+.RC_TabPanel
+  color white
+  padding 20px
+  background-color $tabs-bg-color
+
+.RC_TabPanel--active
+  display block
+
+.RC_TabPanel--inactive
+  display none

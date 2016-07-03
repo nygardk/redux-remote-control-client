@@ -1,0 +1,29 @@
+$button-bg-color = tint(#253A58, 80%)
+
+.RC_Button
+  // resets
+  margin 0
+  padding 0
+  display inline-block
+  vertical-align middle
+  white-space normal
+  -webkit-box-sizing border-box
+  -moz-box-sizing border-box
+  box-sizing border-box
+  border 0
+  cursor pointer
+  line-height 1
+
+  background $button-bg-color
+  padding 10px 14px 9px 14px
+
+  font-size 12px
+  font-family sans-serif
+  text-transform uppercase
+  font-weight bold
+
+  &:focus
+    outline 0
+
+  &:active
+    background darken($button-bg-color, 20%)

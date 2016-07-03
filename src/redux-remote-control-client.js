@@ -1,3 +1,6 @@
+import rcWrapper from './rcWrapper';
+export { rcWrapper };
+
 const DEFAULT_OPTIONS = {
   host: 'localhost',
   port: '8888',
@@ -55,8 +58,4 @@ export function syncMiddleware(opts) {
       next(action);
     };
   };
-}
-
-export function rcWrapper(app) {
-  return app;
 }
