@@ -1,10 +1,21 @@
-import React from 'react';
-import Tabs, { TabPanel } from './Tabs';
+import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
 
+import Tabs, { TabPanel } from './Tabs';
 import Button from './Button';
 import './ControlPanel.styl';
+import {
+  startSharing,
+  stopSharing,
+} from 'actions';
 
-const ControlPanel = () => {
+const ControlPanel = props => {
+  const {
+    connectionActive,
+    dispatch,
+    isConnecting,
+  } = props;
+
   const style = {
     position: 'absolute',
     top: 0,
@@ -19,9 +30,19 @@ const ControlPanel = () => {
     <div className="ControlPanel" style={style}>
       <Tabs>
         <TabPanel title="Share">
-          <Button>
-            Start sharing
-          </Button>
+          {isConnecting && 'Connecting...'}
+
+          {!isConnecting && !connectionActive && (
+            <Button onClick={() => dispatch(startSharing())}>
+              Start sharing
+            </Button>
+          )}
+
+          {!isConnecting && connectionActive && (
+            <Button onClick={() => dispatch(stopSharing())}>
+              Stop sharing
+            </Button>
+          )}
         </TabPanel>
 
         <TabPanel title="Connect">
@@ -42,4 +63,12 @@ const ControlPanel = () => {
   );
 };
 
-export default ControlPanel;
+ControlPanel.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  isConnecting: PropTypes.bool.isRequired,
+  connectionActive: PropTypes.bool.isRequired,
+};
+
+export default connect(state => ({
+  ...state,
+}))(ControlPanel);

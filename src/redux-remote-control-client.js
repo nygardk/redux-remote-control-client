@@ -1,10 +1,6 @@
 import rcWrapper from './rcWrapper';
 export { rcWrapper };
-
-const DEFAULT_OPTIONS = {
-  host: 'localhost',
-  port: '8888',
-};
+import WS, { STATUS_SHARING } from './WS';
 
 function throttle(delayMs, action) {
   let wait;
@@ -24,36 +20,46 @@ function mouseEvent(name, e) {
   return `${name}_${e.clientX},${e.clientY}`;
 }
 
-export function syncMiddleware(opts) {
-  const options = { ...DEFAULT_OPTIONS, ...opts };
+export function syncMiddleware(options) {
+  WS.configure(options);
 
   return store => {
-    const ws = new WebSocket(`ws://${options.host}:${options.port}`);
-
-    ws.onopen = () => {
-      window.onmousemove = throttle(50, e => {
+    window.onmousemove = throttle(50, e => {
+      WS.whenSharing(ws => {
         ws.send(mouseEvent('WMP', e));
       });
+    });
 
-      window.onmousedown = e => {
+    window.onmousedown = e => {
+      WS.whenSharing(ws => {
         ws.send(mouseEvent('WMD', e));
-      };
+      });
+    };
 
-      window.onmouseup = e => {
+    window.onmouseup = e => {
+      WS.whenSharing(ws => {
         ws.send(mouseEvent('WMU', e));
-      };
+      });
+    };
+
+    WS.onOpen((ws, status) => {
+      if (status !== STATUS_SHARING) {
+        return;
+      }
 
       ws.send(JSON.stringify({
         action: 'SYNC_STATE',
         data: store.getState(),
       }));
-    };
+    });
 
     return next => action => {
-      ws.send(JSON.stringify({
-        action: 'ACTION',
-        data: action,
-      }));
+      WS.whenSharing(ws => {
+        ws.send(JSON.stringify({
+          action: 'ACTION',
+          data: action,
+        }));
+      });
 
       next(action);
     };
