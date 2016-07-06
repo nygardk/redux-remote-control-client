@@ -11,6 +11,7 @@ const TabPanel = props => (
 
 TabPanel.propTypes = {
   children: PropTypes.node,
+  disabled: PropTypes.bool,
   title: PropTypes.string.isRequired,
 };
 
@@ -54,7 +55,8 @@ class Tabs extends Component {
 
             return (
               <div className={tabsClasses}
-                onClick={() => this.setState({ activeTabIndex: index })}>
+                onClick={() => !child.props.disabled &&
+                  this.setState({ activeTabIndex: index })}>
                 {child.props.title}
               </div>
             );

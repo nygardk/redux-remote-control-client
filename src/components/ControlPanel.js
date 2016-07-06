@@ -12,6 +12,7 @@ import {
 const ControlPanel = props => {
   const {
     connectionActive,
+    connectionId,
     dispatch,
     isConnecting,
   } = props;
@@ -39,13 +40,19 @@ const ControlPanel = props => {
           )}
 
           {!isConnecting && connectionActive && (
-            <Button onClick={() => dispatch(stopSharing())}>
-              Stop sharing
-            </Button>
+            <div>
+              <Button onClick={() => dispatch(stopSharing())}>
+                Stop sharing
+              </Button>
+
+              <span style={{ marginLeft: 10 }}>
+                Your ID: <strong>{connectionId}</strong>
+              </span>
+            </div>
           )}
         </TabPanel>
 
-        <TabPanel title="Connect">
+        <TabPanel title="Connect" disabled={connectionActive}>
           <label>
             <span style={{ marginRight: 10 }}>
               Connect to id
@@ -64,6 +71,7 @@ const ControlPanel = props => {
 };
 
 ControlPanel.propTypes = {
+  connectionId: PropTypes.string,
   dispatch: PropTypes.func.isRequired,
   isConnecting: PropTypes.bool.isRequired,
   connectionActive: PropTypes.bool.isRequired,

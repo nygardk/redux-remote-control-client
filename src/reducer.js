@@ -1,5 +1,6 @@
 const INITIAL_STATE = {
   connectionActive: false,
+  connectionId: undefined,
   isConnecting: false,
 };
 
@@ -16,6 +17,7 @@ export default function controlPanelReducer(state = INITIAL_STATE, action) {
         ...state,
         isConnecting: false,
         connectionActive: true,
+        connectionId: action.connectionId,
       };
 
     case 'CONNECTION_ESTABLISHATION_ERROR':
@@ -29,6 +31,7 @@ export default function controlPanelReducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         connectionActive: false,
+        connectionId: undefined,
       };
 
     default:
