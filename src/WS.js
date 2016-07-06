@@ -8,16 +8,17 @@ const DEFAULT_OPTIONS = {
 };
 
 let ws;
-const actions = [];
+const actions = {};
 let status = STATUS_CLOSED;
 let options = DEFAULT_OPTIONS;
 
 export default {
-  connection: ws,
-  status,
-
   configure(opts) {
     options = { ...DEFAULT_OPTIONS, opts };
+  },
+
+  registerAction(actionType, action) {
+    actions[actionType] = action;
   },
 
   onOpen(action) {
@@ -28,16 +29,31 @@ export default {
     return new Promise((resolve, reject) => {
       ws = new WebSocket(`ws://${options.host}:${options.port}/${id || ''}`);
 
-      ws.onopen = () => {
-        if (id) {
-          status = STATUS_RECEIVING;
-        } else {
-          status = STATUS_SHARING;
+      ws.onmessage = event => {
+        let eventData;
+
+        try {
+          eventData = JSON.parse(event.data);
+        } catch (e) {
+          if (id) {
+            status = STATUS_RECEIVING;
+          } else {
+            status = STATUS_SHARING;
+          }
+
+          resolve(event.data);
         }
 
-        actions.forEach(action => action(ws, status));
+        if (!eventData || !eventData.action || !actions[eventData.action]) {
+          return;
+        }
 
-        resolve();
+        // eventHandler(status, ws, event, actions);
+
+        ws.send(JSON.stringify({
+          action: eventData.action,
+          data: actions[eventData.action],
+        }));
       };
 
       ws.onerror = () => {

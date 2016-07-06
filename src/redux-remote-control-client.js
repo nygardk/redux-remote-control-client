@@ -1,6 +1,10 @@
 import rcWrapper from './rcWrapper';
 export { rcWrapper };
-import WS, { STATUS_SHARING } from './WS';
+
+import rcReducer from './rcReducer';
+export { rcReducer };
+
+import WS from './WS';
 
 function throttle(delayMs, action) {
   let wait;
@@ -42,16 +46,7 @@ export function syncMiddleware(options) {
       });
     };
 
-    WS.onOpen((ws, status) => {
-      if (status !== STATUS_SHARING) {
-        return;
-      }
-
-      ws.send(JSON.stringify({
-        action: 'SYNC_STATE',
-        data: store.getState(),
-      }));
-    });
+    WS.registerAction('SYNC_STATE', () => store.getState());
 
     return next => action => {
       WS.whenSharing(ws => {
